@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+        version="2.0">
+    <description>建站系统 库方法</description>
+    <tlib-version>1.0</tlib-version>
+    <short-name>cms</short-name>
+    <uri>http://java.sun.com/jsp/jstl/functionscms</uri>
+
+    <function>
+        <description>获取站点信息</description>
+        <name>getSite</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>cn.iutils.cms.entity.Site getSite(java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <description>获取所有栏目导航</description>
+        <name>getNav</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>java.util.List getNav(java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <description>获取栏目下导航</description>
+        <name>getNavBy</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>java.util.List getNavBy(java.lang.String,java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <description>获取栏目下的模块</description>
+        <name>getNavListBy</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>java.util.List getNavListBy(java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <description>获取分类下 文章的数量</description>
+        <name>getCategoryArticleCount</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>int getCategoryArticleCount(java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <description>获取文章分页数据</description>
+        <name>getArticlePage</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>cn.iutils.common.Page getArticlePage(java.util.List,int,int)</function-signature>
+    </function>
+
+    <function>
+        <description>获取文章前n条</description>
+        <name>getArticleList</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>java.util.List getArticleList(java.lang.String,int)</function-signature>
+    </function>
+
+    <function>
+        <description>获取文章内容</description>
+        <name>getArticle</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>cn.iutils.cms.entity.Article getArticle(java.lang.String)</function-signature>
+    </function>
+
+    <function>
+        <description>获取相册前n条</description>
+        <name>getAlbumList</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>java.util.List getAlbumList(java.lang.String,int)</function-signature>
+    </function>
+
+    <function>
+        <description>获取链接前n条</description>
+        <name>getLinkList</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>java.util.List getLinkList(java.lang.String,java.lang.String,int)</function-signature>
+    </function>
+
+    <function>
+        <description>获取商品前n条</description>
+        <name>getCommodityList</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>java.util.List getCommodityList(java.lang.String,int)</function-signature>
+    </function>
+
+    <function>
+        <description>获取随机样式</description>
+        <name>randomCss</name>
+        <function-class>cn.iutils.cms.taglib.CmsLib</function-class>
+        <function-signature>java.lang.String randomCss()</function-signature>
+    </function>
+
+</taglib>

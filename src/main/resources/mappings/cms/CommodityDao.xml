@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.iutils.cms.dao.CommodityDao">
+
+    <sql id="CommodityColumns">
+            a.id as "id",
+            a.category_id as "categoryId",
+            a.sn as "sn",
+            a.name as "name",
+            a.brand_id as "brandId",
+            a.img as "img",
+            a.price as "price",
+            a.market as "market",
+            a.amount as "amount",
+            a.time as "time",
+            a.marketime as "marketime",
+            a.colour as "colour",
+            a.is_shop as "isShop",
+            a.is_rec as "isRec",
+            a.count as "count",
+            a.is_new as "isNew",
+            a.is_hot as "isHot",
+            a.sort as "sort",
+            a.description as "description",
+            a.create_by as "createBy",
+            a.create_date as "createDate",
+            a.update_by as "updateBy",
+            a.update_date as "updateDate",
+            a.remarks as "remarks",
+            a.status as "status"
+    </sql>
+
+    <select id="get" resultType="cn.iutils.cms.entity.Commodity">
+        SELECT
+        <include refid="CommodityColumns"/>
+        FROM cms_commodity a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.iutils.cms.entity.Commodity">
+        SELECT
+        <include refid="CommodityColumns"/>
+        FROM cms_commodity a
+    </select>
+
+    <select id="findSize" resultType="cn.iutils.cms.entity.Commodity">
+        SELECT
+        <include refid="CommodityColumns"/>
+        FROM cms_commodity a
+        where a.category_id=#{categoryId} LIMIT ${size}
+    </select>
+    
+    <select id="count" resultType="int">
+        SELECT count(1) FROM cms_commodity a
+        where a.category_id=#{page.entity.categoryId}
+       	<if test="page.key!=''">
+         	and a.name like
+            <if test="page.entity.dbType == 'oracle'">'%'||#{page.key}||'%')</if>
+            <if test="page.entity.dbType == 'mssql'">'%'+#{page.key}+'%')</if>
+            <if test="page.entity.dbType == 'mysql'">CONCAT('%',#{page.key},'%')</if>
+         </if>
+    </select>
+    
+    <select id="findPage" resultType="cn.iutils.cms.entity.Commodity">
+	        SELECT <include refid="CommodityColumns"/> FROM cms_commodity a
+	        WHERE a.category_id=#{page.entity.categoryId}
+	         <if test="page.key!=''">
+	         	and a.name like
+                 <if test="page.entity.dbType == 'oracle'">'%'||#{page.key}||'%')</if>
+                 <if test="page.entity.dbType == 'mssql'">'%'+#{page.key}+'%')</if>
+                 <if test="page.entity.dbType == 'mysql'">CONCAT('%',#{page.key},'%')</if>
+	         </if>
+	        <if test="page.orderBy!=''">
+	        	 ORDER BY ${page.orderBy} LIMIT ${page.pageNo*page.pageSize},${page.pageSize}
+	        </if>
+    </select>
+
+    <insert id="insert">
+        insert into cms_commodity(
+        		category_id
+                sn,
+                name,
+                brand_id,
+                img,
+                price,
+                market,
+                amount,
+                time,
+                marketime,
+                colour,
+                is_shop,
+                is_rec,
+                count,
+                is_new,
+                is_hot,
+                sort,
+                description,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                status
+        )
+        values(
+        	#{categoryId},
+            #{sn},
+            #{name},
+            #{brandId},
+            #{img},
+            #{price},
+            #{market},
+            #{amount},
+            #{time},
+            #{marketime},
+            #{colour},
+            #{isShop},
+            #{isRec},
+            #{count},
+            #{isNew},
+            #{isHot},
+            #{sort},
+            #{description},
+            #{createBy},
+            #{createDate},
+            #{updateBy},
+            #{updateDate},
+            #{remarks},
+            #{status}
+        )
+    </insert>
+
+    <update id="update">
+        update cms_commodity set
+        	category_id=#{categoryId}
+            sn=#{sn},
+            name=#{name},
+            brand_id=#{brandId},
+            img=#{img},
+            price=#{price},
+            market=#{market},
+            amount=#{amount},
+            time=#{time},
+            marketime=#{marketime},
+            colour=#{colour},
+            is_shop=#{isShop},
+            is_rec=#{isRec},
+            count=#{count},
+            is_new=#{isNew},
+            is_hot=#{isHot},
+            sort=#{sort},
+            description=#{description},
+            create_by=#{createBy},
+            create_date=#{createDate},
+            update_by=#{updateBy},
+            update_date=#{updateDate},
+            remarks=#{remarks},
+            status=#{status}
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from cms_commodity where id=#{id}
+    </delete>
+</mapper>

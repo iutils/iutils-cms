@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.iutils.cms.dao.ArticleDao">
+
+    <sql id="ArticleColumns">
+            a.id as "id",
+            a.category_id as "categoryId",
+            a.title as "title",
+            a.link as "link",
+            a.image as "image",
+            a.hits as "hits",
+            a.keywords as "keywords",
+            a.description as "description",
+            a.create_by as "createBy",
+            a.create_date as "createDate",
+            a.update_by as "updateBy",
+            a.update_date as "updateDate",
+            a.remarks as "remarks",
+            a.status as "status"
+    </sql>
+
+    <sql id="ArticleJoins">
+        LEFT JOIN cms_article_data b ON b.id = a.id LEFT JOIN sys_user c ON c.id=a.create_by LEFT JOIN cms_category d ON d.id=a.category_id
+    </sql>
+
+    <select id="get" resultType="cn.iutils.cms.entity.Article">
+        SELECT
+        <include refid="ArticleColumns"/>
+        ,b.content as "articleData.content",
+        b.copyfrom as "articleData.copyfrom",
+        b.allow_comment as "articleData.allowComment"
+        FROM cms_article a
+        <include refid="ArticleJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.iutils.cms.entity.Article">
+        SELECT
+        <include refid="ArticleColumns"/>
+        FROM cms_article a
+    </select>
+
+    <!-- 获取指定的文章列表 -->
+    <select id="findSize" resultType="cn.iutils.cms.entity.Article">
+        SELECT
+        <include refid="ArticleColumns"/>
+        ,b.content as "articleData.content",
+        b.copyfrom as "articleData.copyfrom",
+        b.allow_comment as "articleData.allowComment"
+        FROM cms_article a
+        <include refid="ArticleJoins"/>
+        where a.category_id=#{categoryId} LIMIT ${size}
+    </select>
+    
+    <select id="count" resultType="int">
+        SELECT count(1) FROM cms_article a <if test="page.key!=''"><include refid="ArticleJoins"/></if>
+        <where>
+            <if test="page.entity!=null and page.entity.categoryId!=null">
+                and a.category_id=#{page.entity.categoryId}
+            </if>
+            <if test="page.key!=''">
+                and (a.title LIKE '%${page.key}%' or b.content LIKE '%${page.key}%')
+            </if>
+            <if test="page.entity!=null and page.entity.categoryIds!=null">
+                and a.category_id in(
+                <foreach collection="page.entity.categoryIds" item="categoryId" separator=",">
+                    #{categoryId}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
+    
+    <select id="findPage" resultType="cn.iutils.cms.entity.Article">
+        SELECT <include refid="ArticleColumns"/>
+        ,b.content as "articleData.content",
+        b.copyfrom as "articleData.copyfrom",
+        b.allow_comment as "articleData.allowComment",
+        c.username as "user.username",
+        c.name as "user.name",
+        d.name as "category.name"
+        FROM cms_article a
+        <include refid="ArticleJoins"/>
+        <where>
+            <if test="page.entity!=null and page.entity.categoryId!=null">
+                and a.category_id=#{page.entity.categoryId}
+            </if>
+            <if test="page.key!=''">
+                and (a.title LIKE '%${page.key}%' or b.content LIKE '%${page.key}%')
+            </if>
+            <if test="page.entity!=null and page.entity.categoryIds!=null">
+               and a.category_id in(
+                <foreach collection="page.entity.categoryIds" item="categoryId" separator=",">
+                    #{categoryId}
+                </foreach>
+                )
+            </if>
+        </where>
+        <if test="page.orderBy!=''">
+             ORDER BY ${page.orderBy} LIMIT ${page.pageNo*page.pageSize},${page.pageSize}
+        </if>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into cms_article(
+                category_id,
+                title,
+                link,
+                image,
+                hits,
+                keywords,
+                description,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                status
+        )
+        values(
+            #{categoryId},
+            #{title},
+            #{link},
+            #{image},
+            #{hits},
+            #{keywords},
+            #{description},
+            #{createBy},
+            #{createDate},
+            #{updateBy},
+            #{updateDate},
+            #{remarks},
+            #{status}
+        )
+    </insert>
+
+    <update id="update">
+        update cms_article set
+            category_id=#{categoryId},
+            title=#{title},
+            link=#{link},
+            image=#{image},
+            hits=#{hits},
+            keywords=#{keywords},
+            description=#{description},
+            create_by=#{createBy},
+            create_date=#{createDate},
+            update_by=#{updateBy},
+            update_date=#{updateDate},
+            remarks=#{remarks},
+            status=#{status}
+        where id=#{id}
+    </update>
+    
+    <!-- 访问加1 -->
+    <update id="updateHitsAddOne">
+		update cms_article set
+			 hits = hits+1
+		 WHERE id = #{id}
+	</update>
+
+    <delete id="delete">
+        delete from cms_article where id=#{id}
+    </delete>
+</mapper>

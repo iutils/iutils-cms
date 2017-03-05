@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.iutils.cms.dao.AlbumDao">
+
+    <sql id="AlbumColumns">
+            a.id as "id",
+            a.category_id as "categoryId",
+            a.title as "title",
+            a.image as "image",
+            a.create_by as "createBy",
+            a.create_date as "createDate",
+            a.update_by as "updateBy",
+            a.update_date as "updateDate",
+            a.remarks as "remarks",
+            a.status as "status"
+    </sql>
+
+    <select id="get" resultType="cn.iutils.cms.entity.Album">
+        SELECT
+        <include refid="AlbumColumns"/>
+        FROM cms_album a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.iutils.cms.entity.Album">
+        SELECT
+        <include refid="AlbumColumns"/>
+        FROM cms_album a
+    </select>
+
+    <select id="findSize" resultType="cn.iutils.cms.entity.Album">
+        SELECT
+        <include refid="AlbumColumns"/>
+        FROM cms_album a where a.category_id=#{categoryId} LIMIT ${size}
+    </select>
+    
+    <select id="count" resultType="int">
+        SELECT count(1) FROM cms_album a
+        where a.category_id=#{page.entity.categoryId}
+       	<if test="page.key!=''">
+         	and a.title like
+            <if test="page.entity.dbType == 'oracle'">'%'||#{page.key}||'%')</if>
+            <if test="page.entity.dbType == 'mssql'">'%'+#{page.key}+'%')</if>
+            <if test="page.entity.dbType == 'mysql'">CONCAT('%',#{page.key},'%')</if>
+         </if>
+    </select>
+    
+    <select id="findPage" resultType="cn.iutils.cms.entity.Album">
+	        SELECT <include refid="AlbumColumns"/> FROM cms_album a
+	        WHERE a.category_id=#{page.entity.categoryId}
+	         <if test="page.key!=''">
+	         	and a.title like
+                 <if test="page.entity.dbType == 'oracle'">'%'||#{page.key}||'%')</if>
+                 <if test="page.entity.dbType == 'mssql'">'%'+#{page.key}+'%')</if>
+                 <if test="page.entity.dbType == 'mysql'">CONCAT('%',#{page.key},'%')</if>
+	         </if>
+	        <if test="page.orderBy!=''">
+	        	 ORDER BY ${page.orderBy} LIMIT ${page.pageNo*page.pageSize},${page.pageSize}
+	        </if>
+    </select>
+
+    <insert id="insert">
+        insert into cms_album(
+                category_id,
+                title,
+                image,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                status
+        )
+        values(
+            #{categoryId},
+            #{title},
+            #{image},
+            #{createBy},
+            #{createDate},
+            #{updateBy},
+            #{updateDate},
+            #{remarks},
+            #{status}
+        )
+    </insert>
+
+    <update id="update">
+        update cms_album set
+            category_id=#{categoryId},
+            title=#{title},
+            image=#{image},
+            create_by=#{createBy},
+            create_date=#{createDate},
+            update_by=#{updateBy},
+            update_date=#{updateDate},
+            remarks=#{remarks},
+            status=#{status}
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from cms_album where id=#{id}
+    </delete>
+</mapper>

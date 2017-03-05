@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.iutils.cms.dao.SiteDao">
+
+    <sql id="SiteColumns">
+            a.id as "id",
+            a.name as "name",
+            a.logo as "logo",
+            a.icon as "icon",
+            a.domain as "domain",
+            a.description as "description",
+            a.keywords as "keywords",
+            a.copyright as "copyright",
+            a.theme as "theme",
+            a.is_default as "isDefault",
+            a.create_by as "createBy",
+            a.create_date as "createDate",
+            a.update_by as "updateBy",
+            a.update_date as "updateDate",
+            a.remarks as "remarks",
+            a.status as "status"
+    </sql>
+
+    <select id="get" resultType="cn.iutils.cms.entity.Site">
+        SELECT
+        <include refid="SiteColumns"/>
+        FROM cms_site a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getDefault" resultType="cn.iutils.cms.entity.Site">
+        SELECT
+        <include refid="SiteColumns"/>
+        FROM cms_site a
+        WHERE a.is_default = '1'
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT count(1) FROM cms_site a
+        <where>
+            <!-- 数据权限控制代码 -->
+            <if test="page.entity.user!=null and page.entity.user.isDept">
+                and a.create_by in(select id from sys_user where organization_id in(select id from sys_organization where parent_ids like '%${page.entity.user.organizationId}/%' or id=#{page.entity.user.organizationId}))
+            </if>
+            <if test="page.entity.user!=null and !page.entity.user.isDept">
+                and a.create_by=#{page.entity.user.id}
+            </if>
+        </where>
+    </select>
+    
+    <select id="findPage" resultType="cn.iutils.cms.entity.Site">
+	    SELECT <include refid="SiteColumns"/> FROM cms_site a
+        <where>
+            <!-- 数据权限控制代码 -->
+            <if test="page.entity.user!=null and page.entity.user.isDept">
+                and a.create_by in(select id from sys_user where organization_id in(select id from sys_organization where parent_ids like '%${page.entity.user.organizationId}/%' or id=#{page.entity.user.organizationId}))
+            </if>
+            <if test="page.entity.user!=null and !page.entity.user.isDept">
+                and a.create_by=#{page.entity.user.id}
+            </if>
+        </where>
+	        <if test="page.orderBy!=''">
+	        	 ORDER BY ${page.orderBy} LIMIT ${page.pageNo*page.pageSize},${page.pageSize}
+	        </if>
+    </select>
+
+    <insert id="insert">
+        insert into cms_site(
+                name,
+                logo,
+                icon,
+                domain,
+                description,
+                keywords,
+                copyright,
+                theme,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                status
+        )
+        values(
+            #{name},
+            #{logo},
+            #{icon},
+            #{domain},
+            #{description},
+            #{keywords},
+            #{copyright},
+            #{theme},
+            #{createBy},
+            #{createDate},
+            #{updateBy},
+            #{updateDate},
+            #{remarks},
+            #{status}
+        )
+    </insert>
+
+    <update id="update">
+        update cms_site set
+            name=#{name},
+            logo=#{logo},
+            icon=#{icon},
+            domain=#{domain},
+            description=#{description},
+            keywords=#{keywords},
+            copyright=#{copyright},
+            theme=#{theme},
+            create_by=#{createBy},
+            create_date=#{createDate},
+            update_by=#{updateBy},
+            update_date=#{updateDate},
+            remarks=#{remarks},
+            status=#{status}
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from cms_site where id=#{id}
+    </delete>
+
+    <!-- 设置默认网站 -->
+    <update id="setDefault">
+      update cms_site set is_default='1' where id=#{id}
+    </update>
+    <!-- 恢复网站 -->
+    <update id="restore">
+        update cms_site set is_default='0' where is_default='1'
+    </update>
+
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.iutils.cms.dao.CategoryDao">
+
+    <sql id="CategoryColumns">
+            a.id as "id",
+            a.site_id as "siteId",
+            a.parent_id as "parentId",
+            a.name as "name",
+            a.sort as "sort",
+            a.href as "href",
+            a.module as "module",
+            a.show_home as "showHome",
+            a.is_by as "isBy",
+            a.custom_view as "customView",
+            a.create_by as "createBy",
+            a.create_date as "createDate",
+            a.update_by as "updateBy",
+            a.update_date as "updateDate",
+            a.remarks as "remarks",
+            a.status as "status"
+    </sql>
+
+	<!-- 查询站点栏目 -->
+    <select id="findListBySiteId" resultType="cn.iutils.cms.entity.Category">
+    	SELECT
+        <include refid="CategoryColumns"/>
+        FROM cms_category a
+        WHERE a.site_id = #{siteId} order by a.sort
+    </select>
+    
+    <select id="get" resultType="cn.iutils.cms.entity.Category">
+        SELECT
+        <include refid="CategoryColumns"/>
+        FROM cms_category a
+        WHERE a.id = #{id}
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="findList" resultType="cn.iutils.cms.entity.Category">
+        SELECT
+        <include refid="CategoryColumns"/>
+        FROM cms_category a
+        <where>
+        	<if test="module!=null and module!=''">
+	         	and a.module=#{module}
+	        </if>
+	        <if test="siteId !=null and siteId!=''">
+	         	and a.site_id=#{siteId}
+	        </if>
+            <if test="parentId!=null and parentId!=''">
+                and a.parent_id=#{parentId}
+            </if>
+            <if test="showHome==1">
+                and show_home=1
+            </if>
+        </where>
+         order by a.sort
+    </select>
+    
+    <select id="count" resultType="int">
+        SELECT count(1) FROM cms_category 
+        WHERE site_id=#{page.entity.siteId} and parent_id=#{page.entity.parentId}
+       	<if test="page.key!=''">
+         	and name=#{page.key}
+         </if>
+    </select>
+    
+    <select id="findPage" resultType="cn.iutils.cms.entity.Category">
+	        SELECT <include refid="CategoryColumns"/> FROM cms_category a
+	         WHERE site_id=#{page.entity.siteId} and parent_id=#{page.entity.parentId}
+	         <if test="page.key!=''">
+	         	and a.name=#{page.key}
+	         </if>
+	        <if test="page.orderBy!=''">
+	        	 ORDER BY ${page.orderBy} LIMIT ${page.pageNo*page.pageSize},${page.pageSize}
+	        </if>
+    </select>
+
+    <insert id="insert">
+        insert into cms_category(
+                site_id,
+                parent_id,
+                name,
+                sort,
+                href,
+                module,
+                show_home,
+                is_by,
+                custom_view,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                status
+        )
+        values(
+            #{siteId},
+            #{parentId},
+            #{name},
+            #{sort},
+            #{href},
+            #{module},
+            #{showHome},
+            #{isBy},
+            #{customView},
+            #{createBy},
+            #{createDate},
+            #{updateBy},
+            #{updateDate},
+            #{remarks},
+            #{status}
+        )
+    </insert>
+
+    <update id="update">
+        update cms_category set
+            site_id=#{siteId},
+            parent_id=#{parentId},
+            name=#{name},
+            sort=#{sort},
+            href=#{href},
+            module=#{module},
+            show_home=#{showHome},
+            is_by=#{isBy},
+            custom_view=#{customView},
+            create_by=#{createBy},
+            create_date=#{createDate},
+            update_by=#{updateBy},
+            update_date=#{updateDate},
+            remarks=#{remarks},
+            status=#{status}
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from cms_category where id=#{id}
+    </delete>
+</mapper>

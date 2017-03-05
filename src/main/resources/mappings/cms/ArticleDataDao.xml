@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.iutils.cms.dao.ArticleDataDao">
+
+    <sql id="ArticleDataColumns">
+            a.id as "id",
+            a.content as "content",
+            a.copyfrom as "copyfrom",
+            a.allow_comment as "allowComment"
+    </sql>
+
+    <select id="get" resultType="cn.iutils.cms.entity.ArticleData">
+        SELECT
+        <include refid="ArticleDataColumns"/>
+        FROM cms_article_data a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="cn.iutils.cms.entity.ArticleData">
+        SELECT
+        <include refid="ArticleDataColumns"/>
+        FROM cms_article_data a
+    </select>
+
+    <insert id="insert">
+        insert into cms_article_data(
+                id,
+                content,
+                copyfrom,
+                allow_comment
+        )
+        values(
+            #{id},
+            #{content},
+            #{copyfrom},
+            #{allowComment}
+        )
+    </insert>
+
+    <update id="update">
+        update cms_article_data set
+            id=#{id},
+            content=#{content},
+            copyfrom=#{copyfrom},
+            allow_comment=#{allowComment}
+        where id=#{id}
+    </update>
+
+    <delete id="delete">
+        delete from cms_article_data where id=#{id}
+    </delete>
+</mapper>
