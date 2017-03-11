@@ -31,6 +31,6 @@ public interface SiteDao extends ICrudDao<Site> {
      * @param id
      * @return
      */
-    public int setDefault(@Param("id")String id);
+    public int setDefault(@Param("id") String id);
 
 }

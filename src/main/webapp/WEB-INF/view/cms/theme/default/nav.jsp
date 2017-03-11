@@ -35,7 +35,7 @@
                         <div class="am-panel-bd">
                             <ul class="am-list am-list-static class-list">
                                 <c:forEach items="${cms:getNavListBy(categoryNext.id)}" var="nav" varStatus="status">
-                                    <li style="padding:0;"><a href="${ctxF}/${site.id}/${category.id}/nav${urlSuffix}?categoryId=${nav.id}" class="am-text-truncate" <c:if test="${nav.id==param.categoryId}">style="color:#DD514C;"</c:if>><c:if test="${nav.id==param.categoryId}"><i class="am-icon-hand-o-right"></i></c:if> ${nav.name} </a> <a href="${ctxF}/${site.id}/${category.id}/${nav.id}/share${urlSuffix}" style="float:right;margin-top:-50px;border-bottom:none;"></a></li>
+                                    <li style="padding:0;"><a href="${ctxF}/${category.id}/nav${urlSuffix}?categoryId=${nav.id}<c:if test="${not empty param.id}">&id=${param.id}</c:if>" class="am-text-truncate" <c:if test="${nav.id==param.categoryId}">style="color:#DD514C;"</c:if>><c:if test="${nav.id==param.categoryId}"><i class="am-icon-hand-o-right"></i></c:if> ${nav.name} </a> <a href="${ctxF}/${category.id}/${nav.id}/share${urlSuffix}<c:if test="${not empty param.id}">?id=${param.id}</c:if>" style="float:right;margin-top:-50px;border-bottom:none;"></a></li>
                                 </c:forEach>
                             </ul>
                         </div>

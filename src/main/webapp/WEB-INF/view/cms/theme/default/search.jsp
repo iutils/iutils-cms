@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/view/cms/theme/include/taglib.jsp" %>
 <html>
 <head>
-    <title>${site.name} - 搜索</title>
+    <title>${site.name} - 共搜索到${page.total}结果</title>
     <%@ include file="head.jsp" %>
 </head>
 <body>
@@ -22,10 +22,9 @@
                                 <article class="am-article">
                                     <div class="am-article-hd">
                                         <h1 class="am-article-title">
-                                            <div class="category"><span>${article.category.name}</span></div>
-                                                ${fn:replace(article.title,page.key, searchKey)}</h1>
-                                        <p class="am-article-meta"><a href="#">${article.user.name}</a> <fmt:formatDate
-                                                value="${article.updateDate}" pattern="yyyy-MM-dd"/></p>
+                                            <a href="${ctxF}/${category.id}/${article.id}/detail${urlSuffix}<c:if test="${not empty param.id}">?id=${param.id}</c:if>">${fn:replace(article.title,page.key, searchKey)}</a>
+                                        </h1>
+                                        <p class="am-article-meta">作者：<a href="#">${empty article.user.name?article.user.username:article.user.name}</a> 更新：${fnc:relativeDate(article.updateDate)} &nbsp;&nbsp;浏览：${article.hits}次</p>
                                     </div>
                                     <div class="am-article-bd">
                                             ${fn:replace(article.articleData.content,page.key, searchKey)}

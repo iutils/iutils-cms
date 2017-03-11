@@ -17,9 +17,9 @@ import java.net.URLDecoder;
 import java.util.List;
 
 /**
- * 网站访问接口
- *
+ * 网站访问
  * @author iutils.cn
+ * @version 1.0
  */
 @Controller
 @RequestMapping(value = "${frontPath}")
@@ -36,15 +36,6 @@ public class FrontController extends BaseController {
 
     @Autowired
     private ArticleDataService articleDataService;
-
-    @Autowired
-    private AlbumService albumService;
-
-    @Autowired
-    private LinkService linkService;
-
-    @Autowired
-    private CommodityService commodityService;
 
     @ModelAttribute
     public Site get(@RequestParam(required = false) String id) {
@@ -76,11 +67,11 @@ public class FrontController extends BaseController {
      * 用户个人中心
      * @return
      */
-    @RequestMapping(value = "/personal${urlSuffix}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user${urlSuffix}", method = RequestMethod.GET)
     public String personal(Site site,Model model){
         // 获取网站信息
         model.addAttribute("site", site);
-        return "cms/theme/" + site.getTheme() + "/personal";
+        return "cms/theme/" + site.getTheme() + "/user";
     }
 
     /**
@@ -150,10 +141,9 @@ public class FrontController extends BaseController {
      * @param articleId 内容ID
      * @return
      */
-    @RequestMapping(value = "/{siteId}/{navId}/{articleId}/detail${urlSuffix}", method = RequestMethod.GET)
-    public String detail(Site site, @PathVariable("navId") String navId, @PathVariable("categoryId") String categoryId,
-                         @PathVariable("articleId") String articleId, Model model) {
-        common(site, navId, categoryId, model);
+    @RequestMapping(value = "/{navId}/{articleId}/detail${urlSuffix}", method = RequestMethod.GET)
+    public String detail(Site site, @PathVariable("navId") String navId,@PathVariable("articleId") String articleId, Model model) {
+        common(site, navId, null, model);
         // 获取详细内容
         Article article = articleService.get(articleId);
         model.addAttribute("article", article);
@@ -177,6 +167,8 @@ public class FrontController extends BaseController {
         Category category = new Category();
         category.setParentId(navId);
         model.addAttribute("categoryNexts", categoryService.findList(category));
-        model.addAttribute("categoryId", categoryId);
+        if (JStringUtils.isNotBlank(categoryId)){
+            model.addAttribute("categoryChild", categoryService.get(categoryId));
+        }
     }
 }

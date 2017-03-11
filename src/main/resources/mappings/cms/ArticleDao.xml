@@ -28,7 +28,11 @@
         <include refid="ArticleColumns"/>
         ,b.content as "articleData.content",
         b.copyfrom as "articleData.copyfrom",
-        b.allow_comment as "articleData.allowComment"
+        b.allow_comment as "articleData.allowComment",
+        c.username as "user.username",
+        c.name as "user.name",
+        d.name as "category.name",
+        d.id as "category.id"
         FROM cms_article a
         <include refid="ArticleJoins"/>
         WHERE a.id = #{id}
@@ -78,7 +82,8 @@
         b.allow_comment as "articleData.allowComment",
         c.username as "user.username",
         c.name as "user.name",
-        d.name as "category.name"
+        d.name as "category.name",
+        d.id as "category.id"
         FROM cms_article a
         <include refid="ArticleJoins"/>
         <where>
